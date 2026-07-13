@@ -10,6 +10,6 @@ jobs:
       - name: Send Discord message
         run: |
           cat > payload.json <<'EOF'
-          {"content": "Don't forget to grab this week's redeem code: https://x.com/service"}
+          {"content": "🎁 Don't forget to grab this week's redeem code: https://x.com/JuicychatAI"}
           EOF
           curl -H "Content-Type: application/json" -d @payload.json ${{ secrets.DISCORD_WEBHOOK_URL }}
