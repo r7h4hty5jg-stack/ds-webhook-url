@@ -10,5 +10,5 @@ jobs:
       - name: Send Discord message
         run: |
           curl -H "Content-Type: application/json" \
-            -d '{"content": "🎁 Check if there's a new redeem code for JuicyChat: https://x.com/JuicychatAI"}' \
+            -d '{"content": "🎁 Проверь новый redeem-код: https://x.com/JuicychatAI"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
