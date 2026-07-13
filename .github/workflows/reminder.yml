@@ -1,14 +1,6 @@
-name: Weekly redeem reminder
-on:
-  schedule:
-    - cron: "0 9 * * 1"   # каждый понедельник в 09:00 UTC
-  workflow_dispatch:        # плюс кнопка "запустить вручную" для теста
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Discord message
+- name: Send Discord message
         run: |
-          curl -H "Content-Type: application/json" \
-            -d '{"content": "🎁 Проверь новый redeem-код: https://x.com/JuicychatAI"}' \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+          cat > payload.json <<'EOF'
+          {"content": "Don't forget to grab this week's redeem code: https://x.com/service"}
+          EOF
+          curl -H "Content-Type: application/json" -d @payload.json ${{ secrets.DISCORD_WEBHOOK_URL }}
