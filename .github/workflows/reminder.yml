@@ -1,6 +1,6 @@
 - name: Send Discord message
+        env:
+          MESSAGE: "Don't forget to grab this week's redeem code: https://x.com/service"
         run: |
-          cat > payload.json <<'EOF'
-          {"content": "Don't forget to grab this week's redeem code: https://x.com/service"}
-          EOF
-          curl -H "Content-Type: application/json" -d @payload.json ${{ secrets.DISCORD_WEBHOOK_URL }}
+          jq -n --arg content "$MESSAGE" '{content: $content}' \
+          | curl -H "Content-Type: application/json" -d @- ${{ secrets.DISCORD_WEBHOOK_URL }}
