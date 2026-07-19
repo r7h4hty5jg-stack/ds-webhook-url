@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Send random image to Discord
         env:
-          WEBHOOK_URL: ${{ secrets.DISCORD_IMAGE_WEBHOOK_URL }}
+          WEBHOOK_URL: ${{ secrets.DISCORD_IMAGE_URL }}
         run: |
           pip install requests
           python - <<'EOF'
