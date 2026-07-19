@@ -15,7 +15,7 @@ jobs:
           python - <<'EOF'
           import os, random, requests
           def meme():
-              d = requests.get("https://meme-api.com/gimme/dankmemes", timeout=10).json()
+              d = requests.get("https://meme-api.com/gimme/wholesomememes", timeout=10).json()
               return d["url"], f"😄 {d['title']}"
           def dog():
               m = requests.get("https://dog.ceo/api/breeds/image/random", timeout=10).json()["message"]
@@ -23,6 +23,6 @@ jobs:
           def cat():
               u = requests.get("https://api.thecatapi.com/v1/images/search", timeout=10).json()[0]["url"]
               return u, "🐱 kitty"
-          url, cap = random.choice([meme, dog, cat])()
+          url, cap = random.choice([meme])()
           requests.post(os.environ["WEBHOOK_URL"], json={"content": f"{cap}\n{url}"})
           EOF
