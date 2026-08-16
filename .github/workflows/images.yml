@@ -1,26 +1,83 @@
 name: Random image every 2 hours
+
 on:
   schedule:
     - cron: "0 */2 * * *"   # каждые 2 часа (время UTC)
-  workflow_dispatch:          # кнопка ручного запуска для теста
+  workflow_dispatch:        # кнопка ручного запуска для теста
+
+permissions:
+  contents: write           # нужно, чтобы коммитить историю обратно в репозиторий
+
 jobs:
   post:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Send random image to Discord
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_IMAGE_URL }}
         run: |
           pip install requests
           python - <<'EOF'
-          import os, random, requests
+          import os, json, random, pathlib, requests
 
           SUBS = ["aww", "rarepuppers", "Eyebleach", "AnimalsBeingDerps",
                   "EarthPorn", "NatureIsFuckingLit", "SpacePorn",
                   "oddlysatisfying", "CozyPlaces"]
 
-          sub = random.choice(SUBS)
-          d = requests.get(f"https://meme-api.com/gimme/{sub}", timeout=10).json()
+          HISTORY = pathlib.Path("seen.json")
+          seen = json.loads(HISTORY.read_text()) if HISTORY.exists() else []
+
+          HEADERS = {"User-Agent": "discord-image-bot/1.0 (by u/yourname)"}
+          IMG_EXT = (".jpg", ".jpeg", ".png", ".gif")
+
+          def candidates(sub):
+              """Собираем пул картинок из сабреддита: hot + top за год."""
+              out = []
+              for listing, extra in (("hot", ""), ("top", "&t=year")):
+                  url = f"https://www.reddit.com/r/{sub}/{listing}.json?limit=100{extra}"
+                  try:
+                      r = requests.get(url, headers=HEADERS, timeout=15)
+                      children = r.json()["data"]["children"]
+                  except Exception as e:
+                      print(f"не смог прочитать r/{sub}/{listing}: {e}")
+                      continue
+                  for child in children:
+                      p = child["data"]
+                      if p.get("is_video") or p.get("stickied"):
+                          continue
+                      if not p.get("url", "").lower().endswith(IMG_EXT):
+                          continue
+                      out.append({"id": p["id"], "title": p["title"], "url": p["url"]})
+              return out
+
+          # идём по сабреддитам в случайном порядке, берём первый с новыми постами
+          random.shuffle(SUBS)
+          post = None
+          for sub in SUBS:
+              fresh = [p for p in candidates(sub) if p["id"] not in seen]
+              if fresh:
+                  post = random.choice(fresh)
+                  print(f"выбран r/{sub}, свежих вариантов: {len(fresh)}")
+                  break
+
+          if post is None:
+              print("Новых картинок не нашлось — пропускаю запуск")
+              raise SystemExit(0)
+
           requests.post(os.environ["WEBHOOK_URL"],
-                        json={"content": f"{d['title']}\n{d['url']}"})
+                        json={"content": f"{post['title']}\n{post['url']}"},
+                        timeout=15)
+
+          seen.append(post["id"])
+          HISTORY.write_text(json.dumps(seen[-500:]))   # помним последние 500
           EOF
+
+      - name: Save history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add seen.json
+          git diff --staged --quiet || git commit -m "update seen history"
+          git push
