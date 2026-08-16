@@ -45,7 +45,7 @@ jobs:
                       continue
                   for child in children:
                       p = child["data"]
-                      if p.get("is_video") or p.get("stickied"):
+                      if p.get("over_18") or p.get("is_video") or p.get("stickied"):
                           continue
                       if not p.get("url", "").lower().endswith(IMG_EXT):
                           continue
