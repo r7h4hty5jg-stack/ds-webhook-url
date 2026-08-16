@@ -23,7 +23,7 @@ jobs:
           import os, json, random, pathlib, requests
 
           SUBS = ["anime_irl", "goodanimemes", "wholesomeanimemes",
-                  "Animewallpaper", "StardustCrusaders", "Ghibli",
+                  "Animewallpaper", "Ghibli",
                   "PixelArt",
                   "hentainmanga", "Hentai__videos", "gaming",
                   "cyberpunk", "RetroFuturism",
