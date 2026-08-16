@@ -22,11 +22,14 @@ jobs:
           python - <<'EOF'
           import os, json, random, pathlib, requests
 
-          SUBS = ["aww", "rarepuppers", "Eyebleach", "AnimalsBeingDerps",
-                  "EarthPorn", "NatureIsFuckingLit", "SpacePorn",
-                  "oddlysatisfying", "CozyPlaces", "MostBeautiful",
-                  "itookapicture", "AnimalsBeingBros", "foodporn",
-                  "AccidentalRenaissance", "BeAmazed"]
+          SUBS = ["anime_irl", "goodanimemes", "wholesomeanimemes",
+                  "Animewallpaper", "StardustCrusaders", "Ghibli",
+                  "pcmasterrace", "battlestations", "PixelArt",
+                  "EldenRing", "Minecraft", "gaming",
+                  "ProgrammerHumor", "softwaregore", "MechanicalKeyboards",
+                  "dndmemes", "Warhammer40k", "minipainting",
+                  "cyberpunk", "outrun", "RetroFuturism",
+                  "ImaginaryTechnology", "ImaginaryCharacters"]
 
           HISTORY = pathlib.Path("seen.json")
           seen = json.loads(HISTORY.read_text()) if HISTORY.exists() else []
