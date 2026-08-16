@@ -26,7 +26,7 @@ jobs:
                   "Animewallpaper", "StardustCrusaders", "Ghibli",
                   "PixelArt",
                   "hentainmanga", "Hentai__videos", "gaming",
-                  "cyberpunk", "outrun", "RetroFuturism",
+                  "cyberpunk", "RetroFuturism",
                   "ImaginaryTechnology", "ImaginaryCharacters"]
 
           HISTORY = pathlib.Path("seen.json")
