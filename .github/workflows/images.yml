@@ -45,8 +45,7 @@ jobs:
               if not memes:
                   print(f"r/{sub}: пустой ответ ({data.get('message', 'нет данных')})")
                   return []
-              return [{"id": m["postLink"], "title": m["title"], "url": m["url"]}
-                      for m in memes if not m.get("nsfw") and not m.get("spoiler")]
+              return [{"id": m["postLink"], "title": m["title"], "url": m["url"]}]
 
           # идём по сабреддитам в случайном порядке, берём первый с новыми постами
           random.shuffle(SUBS)
