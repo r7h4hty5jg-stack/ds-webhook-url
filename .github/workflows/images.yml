@@ -24,33 +24,27 @@ jobs:
 
           SUBS = ["aww", "rarepuppers", "Eyebleach", "AnimalsBeingDerps",
                   "EarthPorn", "NatureIsFuckingLit", "SpacePorn",
-                  "oddlysatisfying", "CozyPlaces"]
+                  "oddlysatisfying", "CozyPlaces", "MostBeautiful",
+                  "itookapicture", "AnimalsBeingBros", "foodporn",
+                  "AccidentalRenaissance", "BeAmazed"]
 
           HISTORY = pathlib.Path("seen.json")
           seen = json.loads(HISTORY.read_text()) if HISTORY.exists() else []
 
-          HEADERS = {"User-Agent": "discord-image-bot/1.0 (by u/yourname)"}
-          IMG_EXT = (".jpg", ".jpeg", ".png", ".gif")
-
           def candidates(sub):
-              """Собираем пул картинок из сабреддита: hot + top за год."""
-              out = []
-              for listing, extra in (("hot", ""), ("top", "&t=year")):
-                  url = f"https://www.reddit.com/r/{sub}/{listing}.json?limit=100{extra}"
-                  try:
-                      r = requests.get(url, headers=HEADERS, timeout=15)
-                      children = r.json()["data"]["children"]
-                  except Exception as e:
-                      print(f"не смог прочитать r/{sub}/{listing}: {e}")
-                      continue
-                  for child in children:
-                      p = child["data"]
-                      if p.get("over_18") or p.get("is_video") or p.get("stickied"):
-                          continue
-                      if not p.get("url", "").lower().endswith(IMG_EXT):
-                          continue
-                      out.append({"id": p["id"], "title": p["title"], "url": p["url"]})
-              return out
+              """Берём у meme-api пачку из 50 постов вместо одного."""
+              url = f"https://meme-api.com/gimme/{sub}/50"
+              try:
+                  data = requests.get(url, timeout=15).json()
+              except Exception as e:
+                  print(f"не смог прочитать r/{sub}: {e}")
+                  return []
+              memes = data.get("memes")
+              if not memes:
+                  print(f"r/{sub}: пустой ответ ({data.get('message', 'нет данных')})")
+                  return []
+              return [{"id": m["postLink"], "title": m["title"], "url": m["url"]}
+                      for m in memes if not m.get("nsfw") and not m.get("spoiler")]
 
           # идём по сабреддитам в случайном порядке, берём первый с новыми постами
           random.shuffle(SUBS)
@@ -61,6 +55,7 @@ jobs:
                   post = random.choice(fresh)
                   print(f"выбран r/{sub}, свежих вариантов: {len(fresh)}")
                   break
+              print(f"r/{sub}: всё уже было, пробую следующий")
 
           if post is None:
               print("Новых картинок не нашлось — пропускаю запуск")
@@ -69,9 +64,10 @@ jobs:
           requests.post(os.environ["WEBHOOK_URL"],
                         json={"content": f"{post['title']}\n{post['url']}"},
                         timeout=15)
+          print(f"отправлено: {post['url']}")
 
           seen.append(post["id"])
-          HISTORY.write_text(json.dumps(seen[-500:]))   # помним последние 500
+          HISTORY.write_text(json.dumps(seen[-400:]))   # помним последние 400
           EOF
 
       - name: Save history
