@@ -22,13 +22,11 @@ jobs:
           python - <<'EOF'
           import os, json, random, pathlib, requests
 
-          SUBS = ["anime_irl", "goodanimemes", "wholesomeanimemes",
-                  "Animewallpaper", "StardustCrusaders", "Ghibli",
-                  "pcmasterrace", "battlestations", "PixelArt",
-                  "gaming", "softwaregore", "hentainmanga",
-                  "dndmemes", "Warhammer40k", "Hentai__videos",
-                  "cyberpunk", "outrun", "RetroFuturism",
-                  "ImaginaryTechnology", "ImaginaryCharacters"]
+          SUBS = ["aww", "rarepuppers", "Eyebleach", "AnimalsBeingDerps",
+                  "EarthPorn", "NatureIsFuckingLit", "SpacePorn",
+                  "oddlysatisfying", "CozyPlaces", "MostBeautiful",
+                  "itookapicture", "AnimalsBeingBros", "foodporn",
+                  "AccidentalRenaissance", "BeAmazed"]
 
           HISTORY = pathlib.Path("seen.json")
           seen = json.loads(HISTORY.read_text()) if HISTORY.exists() else []
@@ -45,7 +43,9 @@ jobs:
               if not memes:
                   print(f"r/{sub}: пустой ответ ({data.get('message', 'нет данных')})")
                   return []
-              
+              return [{"id": m["postLink"], "title": m["title"], "url": m["url"]}
+                      for m in memes if not m.get("nsfw") and not m.get("spoiler")]
+
           # идём по сабреддитам в случайном порядке, берём первый с новыми постами
           random.shuffle(SUBS)
           post = None
