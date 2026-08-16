@@ -24,10 +24,9 @@ jobs:
 
           SUBS = ["anime_irl", "goodanimemes", "wholesomeanimemes",
                   "Animewallpaper", "StardustCrusaders", "Ghibli",
-                  "pcmasterrace", "battlestations", "PixelArt",
-                  "EldenRing", "Minecraft", "gaming",
-                  "ProgrammerHumor", "softwaregore", "MechanicalKeyboards",
-                  "dndmemes", "Warhammer40k", "minipainting",
+                  "PixelArt",
+                  "hentainmanga", "Hentai__videos", "gaming",
+                  "Warhammer40k",
                   "cyberpunk", "outrun", "RetroFuturism",
                   "ImaginaryTechnology", "ImaginaryCharacters"]
 
