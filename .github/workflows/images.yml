@@ -23,11 +23,10 @@ jobs:
           import os, json, random, pathlib, requests
 
           SUBS = ["anime_irl", "goodanimemes", "wholesomeanimemes",
-                  "Animewallpaper", "Ghibli",
-                  "PixelArt",
-                  "hentainmanga", "Hentai__videos", "gaming",
-                  "cyberpunk", "RetroFuturism",
-                  "ImaginaryTechnology", "ImaginaryCharacters"]
+                  "AnimeMILFS", "Ghibli",
+                  "AnimeMilfLvrs",
+                  "hentainmanga", "Hentai__videos", "HentaiiGooning",
+                  "MilfHentai2"]
 
           HISTORY = pathlib.Path("seen.json")
           seen = json.loads(HISTORY.read_text()) if HISTORY.exists() else []
